@@ -1,0 +1,3 @@
+ALTER TABLE "newsletter_verification_tokens" DROP CONSTRAINT "newsletter_verification_tokens_newsletter_entry_id_newsletter_entries_id_fk";
+--> statement-breakpoint
+ALTER TABLE "newsletter_verification_tokens" ADD CONSTRAINT "newsletter_verification_tokens_newsletter_entry_id_newsletter_entries_id_fk" FOREIGN KEY ("newsletter_entry_id") REFERENCES "public"."newsletter_entries"("id") ON DELETE cascade ON UPDATE no action;
