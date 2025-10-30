@@ -1,10 +1,9 @@
-FROM oven/bun:latest
+FROM node:25
 
-RUN apt update && apt install -y nodejs
 
 WORKDIR /app
 COPY . .
-RUN bun install
-RUN bun run build
+RUN npm install
+RUN npm run build
 
-CMD ["bun", "run", "db:migrate", "&&", "bun", "run", "start"]
+CMD ["npm", "run", "db:migrate", "&&", "npm", "run", "start"]
