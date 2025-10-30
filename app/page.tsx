@@ -1,65 +1,143 @@
+import { subscribeToNewsLetter } from "@/app/actions/newsletter";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Image from "next/image";
 
-export default function Home() {
+export default function Home({
+  searchParams,
+}: {
+  searchParams?: Record<string, string | string[] | undefined>;
+}) {
+  async function subscribe(formData: FormData) {
+    "use server";
+    await subscribeToNewsLetter(formData);
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+    <main className="mx-auto max-w-xl px-4 py-12">
+      <div className="mb-8 overflow-hidden rounded-lg border bg-muted relative h-32 sm:h-40 md:h-48">
         <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
+          src="https://loslc.tech/cover.png"
+          alt="LOSL-C cover image"
+          fill
           priority
+          sizes="(max-width: 640px) 100vw, 640px"
+          className="object-cover"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+      </div>
+      {searchParams?.subscribed === "1" && (
+        <div className="mb-6">
+          <Alert>
+            <AlertTitle>Check your inbox</AlertTitle>
+            <AlertDescription>
+              We sent you a verification link to confirm your subscription. If
+              you don’t see it, check your spam folder.
+            </AlertDescription>
+          </Alert>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+      )}
+      <div className="mb-8 text-center">
+        <h1 className="text-2xl font-semibold">
+          Join the LOSL-C community newsletter
+        </h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Get updates on tech events, learning resources, and community projects
+          shaping Africa’s next generation of creators and builders.
+        </p>
+      </div>
+
+      <form action={subscribe} className="space-y-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label
+              htmlFor="firstName"
+              className="mb-1 block text-sm font-medium"
+            >
+              First name
+            </label>
+            <Input
+              id="firstName"
+              name="firstName"
+              required
+              placeholder="Jean"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
+          <div>
+            <label
+              htmlFor="lastName"
+              className="mb-1 block text-sm font-medium"
+            >
+              Last name
+            </label>
+            <Input id="lastName" name="lastName" placeholder="Kokou" />
+          </div>
         </div>
-      </main>
-    </div>
+
+        <div>
+          <label htmlFor="email" className="mb-1 block text-sm font-medium">
+            Email
+          </label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            required
+            placeholder="you@loslc.tech"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label
+              htmlFor="industry"
+              className="mb-1 block text-sm font-medium"
+            >
+              Field or interest
+            </label>
+            <Input
+              id="industry"
+              name="industry"
+              required
+              placeholder="e.g. Software, Cybersecurity"
+            />
+          </div>
+          <div>
+            <label htmlFor="role" className="mb-1 block text-sm font-medium">
+              Role
+            </label>
+            <Input
+              id="role"
+              name="role"
+              required
+              placeholder="e.g. Developer, Student, Entrepreneur"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label
+            htmlFor="preferredContent"
+            className="mb-1 block text-sm font-medium"
+          >
+            What do you want to get from LOSL-C? (optional)
+          </label>
+          <Textarea
+            id="preferredContent"
+            name="preferredContent"
+            placeholder="e.g. Updates on events, learning materials, challenges, job offers..."
+          />
+        </div>
+
+        <Button type="submit" className="w-full sm:w-auto">
+          Join the movement
+        </Button>
+      </form>
+
+      <p className="mt-6 text-center text-xs text-muted-foreground">
+        No spam, ever. Just good news, real opportunities, and community energy.
+      </p>
+    </main>
   );
 }
